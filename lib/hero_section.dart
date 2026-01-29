@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'utils/animated_container.dart';
+import 'utils/buttons/iconButton.dart';
+
 class HeroSection extends StatelessWidget {
   const HeroSection({super.key});
 
@@ -14,7 +17,7 @@ class HeroSection extends StatelessWidget {
           padding: EdgeInsets.symmetric(
             vertical: isMobile ? 40 : 80,
           ),
-          child: isMobile ? const _HeroMobile() : const _HeroDesktop(),
+          child: isMobile ? const _HeroMobile() : _HeroDesktop(),
         );
       },
     );
@@ -26,31 +29,131 @@ class _HeroMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _HeroText(isMobile: true),
-        SizedBox(height: 40),
-        Center(child: _HeroGraphic(isMobile: true)),
+        Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CustomContainer(
+                child: ClipRRect(
+                  clipBehavior: Clip.antiAlias,
+                  borderRadius: BorderRadius.circular(15),
+                  child: Image.asset("assets/images/profile.jpeg"),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Er. JEETENDRA SONI',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Image.asset(
+                    "assets/icons/ind_flag.png",
+                    height: 22,
+                    width: 22,
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  gradient: const LinearGradient(
+                    colors: [Colors.blue, Colors.purple],
+                  ),
+                ),
+                child: const Text(
+                  'Senior Flutter Developer',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 40),
+        const _HeroText(isMobile: true),
       ],
     );
   }
 }
 
 class _HeroDesktop extends StatelessWidget {
-  const _HeroDesktop();
+  bool hovered = false;
+  _HeroDesktop();
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          flex: 6,
-          child: _HeroText(isMobile: false),
+        Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomContainer(
+                color: Colors.white,
+                child: ClipRRect(
+                  clipBehavior: Clip.antiAlias,
+                  borderRadius: BorderRadius.circular(15),
+                  child: Image.asset("assets/images/profile.jpeg"),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  const Text(
+                    'Er. JEETENDRA SONI',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Image.asset(
+                    "assets/icons/ind_flag.png",
+                    height: 22,
+                    width: 22,
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  gradient: const LinearGradient(
+                    colors: [Colors.blue, Colors.purple],
+                  ),
+                ),
+                child: const Text(
+                  'Senior Flutter Developer',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-        SizedBox(width: 40),
-        _HeroGraphic(isMobile: false),
+        const SizedBox(width: 40),
+        const Expanded(child: _HeroText(isMobile: true)),
       ],
     );
   }
@@ -65,26 +168,8 @@ class _HeroText extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            gradient: const LinearGradient(
-              colors: [Colors.blue, Colors.purple],
-            ),
-          ),
-          child: const Text(
-            'Senior Flutter Developer',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        const SizedBox(height: 20),
         Text(
-          'Building Scalable\nMobile & Web Apps',
+          'Building Scalable Mobile & Web Apps',
           style: TextStyle(
             fontSize: isMobile ? 32 : 48,
             height: 1.2,
@@ -95,49 +180,62 @@ class _HeroText extends StatelessWidget {
         const SizedBox(height: 20),
         const Text(
           'Flutter expert focused on performance, clean architecture, '
+          'and beautiful user experiences.'
+          'Flutter expert focused on performance, clean architecture, '
           'and beautiful user experiences.',
           style: TextStyle(
             color: Colors.white70,
             fontSize: 16,
             height: 1.6,
           ),
+          maxLines: 4,
+          overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(height: 30),
         Wrap(
           spacing: 16,
           runSpacing: 16,
           children: [
-            _PrimaryCTA(),
+            CustomButton(
+              icon: const Icon(Icons.request_quote),
+              title: "Hire Me",
+              onTap: () {},
+            ),
             _SecondaryCTA(),
           ],
         ),
+        const SizedBox(
+          height: 20,
+        ),
+        Wrap(
+          children: [
+            CustomButton(
+              icon: Image.asset("assets/icons/youtube.png"),
+              title: "YouTube",
+              onTap: () {},
+              secondary: true,
+            ),
+            CustomButton(
+              icon: Image.asset("assets/icons/linkedin.png"),
+              title: "LinkedIn",
+              onTap: () {},
+              secondary: true,
+            ),
+            CustomButton(
+              icon: Image.asset("assets/icons/github.png"),
+              title: "Github",
+              onTap: () {},
+              secondary: true,
+            ),
+            CustomButton(
+              icon: Image.asset("assets/icons/twitter.png"),
+              title: "Twitter",
+              onTap: () {},
+              secondary: true,
+            ),
+          ],
+        ),
       ],
-    );
-  }
-}
-
-class _PrimaryCTA extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 50,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: 28),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-        ),
-        onPressed: () {
-          // Scroll to contact section
-        },
-        child: const Text(
-          'Hire Me',
-          style: TextStyle(fontWeight: FontWeight.w600),
-        ),
-      ),
     );
   }
 }

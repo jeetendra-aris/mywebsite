@@ -11,7 +11,7 @@ class SkillsSection extends StatelessWidget {
         ? 2
         : width < 1000
             ? 3
-            : 6;
+            : 5;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

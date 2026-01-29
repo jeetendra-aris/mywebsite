@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import 'about.dart';
 import 'contact.dart';
@@ -23,6 +24,170 @@ class PortfolioApp extends StatelessWidget {
       title: 'Flutter Developer Portfolio',
       theme: ThemeData(useMaterial3: true),
       home: const PortfolioPage(),
+    );
+  }
+}
+
+/// ---------------- PAGE ----------------
+class PortfolioPage extends StatefulWidget {
+  const PortfolioPage({super.key});
+
+  @override
+  State<PortfolioPage> createState() => _PortfolioPageState();
+}
+
+class _PortfolioPageState extends State<PortfolioPage> {
+  final ScrollController _scrollController = ScrollController();
+
+  /// Section Keys
+  final homeKey = GlobalKey();
+  final aboutKey = GlobalKey();
+  final skillsKey = GlobalKey();
+  final experienceKey = GlobalKey();
+  final portfolioKey = GlobalKey();
+  final contactKey = GlobalKey();
+
+  void scrollTo(GlobalKey key) {
+    final ctx = key.currentContext;
+    if (ctx == null) return;
+
+    final box = ctx.findRenderObject() as RenderBox;
+    final viewport = RenderAbstractViewport.of(box);
+    final offset = viewport.getOffsetToReveal(box, 0).offset;
+
+    _scrollController.animateTo(
+      offset - 90,
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SizedBox(
+        height: MediaQuery.sizeOf(context).height,
+        width: MediaQuery.sizeOf(context).width,
+        child: CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            /// ---------- CLEAN STICKY NAVBAR ----------
+            SliverAppBar(
+              pinned: true,
+              elevation: 3,
+              backgroundColor: Colors.blueGrey[900],
+              toolbarHeight: 70,
+              automaticallyImplyLeading: false,
+              title: SimpleNavBar(
+                onContactTap: () {
+                  showAdaptiveDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) {
+                        return const ContactFormDialog();
+                      });
+                },
+              ),
+            ),
+
+            /// ---------- CONTENT ----------
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  SectionContainer(
+                    key: homeKey,
+                    background: Colors.black,
+                    showBottomDivider: true,
+                    child: const HeroSection(),
+                  ),
+                  SectionContainer(
+                    key: aboutKey,
+                    background: Colors.white,
+                    child: const AboutSection(),
+                  ),
+                  SectionContainer(
+                    key: skillsKey,
+                    background: const Color(0xFFF5F7FA),
+                    child: const SkillsSection(),
+                  ),
+                  SectionContainer(
+                    key: experienceKey,
+                    background: Colors.white,
+                    child: const ExperienceSection(),
+                  ),
+                  SectionContainer(
+                    key: portfolioKey,
+                    background: const Color(0xFFF5F7FA),
+                    child: const ProjectsSection(),
+                  ),
+                  SectionContainer(
+                    key: contactKey,
+                    background: Colors.black38,
+                    child: const ContactSection(),
+                  ),
+                  const SectionContainer(
+                    background: Colors.black,
+                    child: ProfessionalFooter(),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// ---------------- SIMPLE NAVBAR ----------------
+class SimpleNavBar extends StatelessWidget {
+  final VoidCallback onContactTap;
+
+  const SimpleNavBar({
+    super.key,
+    required this.onContactTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 32),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          /// ---- NAME ----
+          const Flexible(
+            child: Text(
+              "Er. Jeetendra Soni",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+
+          /// ---- CONTACT BUTTON ----
+          ElevatedButton.icon(
+            onPressed: onContactTap,
+            icon: const Icon(Icons.mail_outline),
+            label: Text(isMobile ? "Contact" : "Contact Me"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orangeAccent,
+              foregroundColor: Colors.black,
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 16 : 22,
+                vertical: 14,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -56,7 +221,7 @@ class SectionContainer extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: horizontalPadding,
-              vertical: width < 900 ? 60 : 100,
+              vertical: 60,
             ),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 1200),
@@ -111,250 +276,182 @@ class _WavePainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
-/// ---------------- PAGE ----------------
-class PortfolioPage extends StatefulWidget {
-  const PortfolioPage({super.key});
+class ContactFormDialog extends StatefulWidget {
+  const ContactFormDialog({super.key});
 
   @override
-  State<PortfolioPage> createState() => _PortfolioPageState();
+  State<ContactFormDialog> createState() => _ContactFormDialogState();
 }
 
-class _PortfolioPageState extends State<PortfolioPage> {
-  final ScrollController _scrollController = ScrollController();
-  bool menuOpen = false;
+class _ContactFormDialogState extends State<ContactFormDialog> {
+  final _formKey = GlobalKey<FormState>();
 
-  // Section keys
-  final homeKey = GlobalKey();
-  final aboutKey = GlobalKey();
-  final skillsKey = GlobalKey();
-  final experienceKey = GlobalKey();
-  final portfolioKey = GlobalKey();
-  final contactKey = GlobalKey();
-
-  String activeSection = "Home";
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_onScroll);
-  }
+  final nameCtrl = TextEditingController();
+  final mobCtrl = TextEditingController();
+  final emailCtrl = TextEditingController();
+  final messageCtrl = TextEditingController();
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    nameCtrl.dispose();
+    emailCtrl.dispose();
+    messageCtrl.dispose();
     super.dispose();
-  }
-
-  void scrollTo(GlobalKey key) {
-    Scrollable.ensureVisible(
-      key.currentContext!,
-      duration: const Duration(milliseconds: 600),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  void _onScroll() {
-    void detect(GlobalKey key, String name) {
-      final ctx = key.currentContext;
-      if (ctx == null) return;
-      final box = ctx.findRenderObject() as RenderBox;
-      final pos = box.localToGlobal(Offset.zero).dy;
-
-      if (pos < 120 && pos > -box.size.height + 120) {
-        if (activeSection != name) {
-          setState(() => activeSection = name);
-        }
-      }
-    }
-
-    detect(homeKey, "Home");
-    detect(aboutKey, "About");
-    detect(skillsKey, "Skills");
-    detect(portfolioKey, "Portfolio");
-    detect(contactKey, "Contact");
   }
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final isMobile = width < 900;
 
-    return Scaffold(
-      body: CustomScrollView(
-        controller: _scrollController,
-        slivers: [
-          /// ---------- STICKY NAVBAR ----------
-          SliverAppBar(
-            pinned: true,
-            elevation: 4,
-            backgroundColor: Colors.blueGrey[900],
-            toolbarHeight: 90,
-            automaticallyImplyLeading: false,
-            title: NavBar(
-              isMobile: isMobile,
-              menuOpen: menuOpen,
-              activeSection: activeSection,
-              onMenuTap: () => setState(() => menuOpen = !menuOpen),
-              onNavigate: scrollTo,
-              homeKey: homeKey,
-              aboutKey: aboutKey,
-              skillsKey: skillsKey,
-              portfolioKey: portfolioKey,
-              contactKey: contactKey,
-            ),
-          ),
-
-          /// ---------- CONTENT ----------
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                SectionContainer(
-                  key: homeKey,
-                  background: Colors.black,
-                  showBottomDivider: true,
-                  child: const HeroSection(),
-                ),
-                SectionContainer(
-                  key: aboutKey,
-                  background: Colors.white,
-                  showTopDivider: true,
-                  child: const AboutSection(),
-                ),
-                SectionContainer(
-                  key: skillsKey,
-                  background: const Color(0xFFF5F7FA),
-                  child: const SkillsSection(),
-                ),
-                SectionContainer(
-                  key: experienceKey,
-                  background: Colors.white,
-                  child: const ExperienceSection(),
-                ),
-                SectionContainer(
-                  key: portfolioKey,
-                  background: const Color(0xFFF5F7FA),
-                  child: const ProjectsSection(),
-                ),
-                SectionContainer(
-                  key: contactKey,
-                  background: Colors.black38,
-                  child: const ContactSection(),
-                ),
-                const SectionContainer(
-                  background: Colors.black,
-                  child: ProfessionalFooter(),
-                ),
-              ],
-            ),
-          ),
-        ],
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
       ),
-    );
-  }
-}
-
-/// ---------------- NAVBAR ----------------
-class NavBar extends StatelessWidget {
-  final bool isMobile;
-  final bool menuOpen;
-  final String activeSection;
-  final VoidCallback onMenuTap;
-  final Function(GlobalKey) onNavigate;
-
-  final GlobalKey homeKey;
-  final GlobalKey aboutKey;
-  final GlobalKey skillsKey;
-  final GlobalKey portfolioKey;
-  final GlobalKey contactKey;
-
-  const NavBar({
-    super.key,
-    required this.isMobile,
-    required this.menuOpen,
-    required this.activeSection,
-    required this.onMenuTap,
-    required this.onNavigate,
-    required this.homeKey,
-    required this.aboutKey,
-    required this.skillsKey,
-    required this.portfolioKey,
-    required this.contactKey,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                "Er. Jeetendra Soni",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              if (!isMobile)
-                Row(
-                  children: [
-                    navItem("Home", homeKey),
-                    navItem("About", aboutKey),
-                    navItem("Skills", skillsKey),
-                    navItem("Portfolio", portfolioKey),
-                    navItem("Contact", contactKey),
-                  ],
-                )
-              else
-                IconButton(
-                  icon: Icon(menuOpen ? Icons.close : Icons.menu, color: Colors.white),
-                  onPressed: onMenuTap,
-                ),
-            ],
-          ),
-          if (isMobile && menuOpen)
-            Column(
+      insetPadding: const EdgeInsets.all(20),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: width < 600 ? width : 450,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                navItem("Home", homeKey),
-                navItem("About", aboutKey),
-                navItem("Skills", skillsKey),
-                navItem("Portfolio", portfolioKey),
-                navItem("Contact", contactKey),
+                /// -------- HEADER --------
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Contact Me",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                /// -------- NAME --------
+                _inputField(
+                  controller: nameCtrl,
+                  label: "Your Name",
+                  icon: Icons.person_outline,
+                  validator: (v) => v!.isEmpty ? "Please enter your name" : null,
+                ),
+                const SizedBox(height: 14),
+
+                /// -------- NAME --------
+                _inputField(
+                  controller: mobCtrl,
+                  label: "Mobile no.",
+                  icon: Icons.phone_android,
+                  validator: (v) => v!.isEmpty ? "Please enter your mobile no." : null,
+                ),
+
+                const SizedBox(height: 14),
+
+                /// -------- EMAIL --------
+                _inputField(
+                  controller: emailCtrl,
+                  label: "Email Address",
+                  icon: Icons.email_outlined,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (v) {
+                    if (v!.isEmpty) return "Email is required";
+                    if (!v.contains("@")) return "Enter valid email";
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 14),
+
+                /// -------- MESSAGE --------
+                _inputField(
+                  controller: messageCtrl,
+                  label: "Message",
+                  icon: Icons.message_outlined,
+                  maxLines: 4,
+                  validator: (v) => v!.isEmpty ? "Please write a message" : null,
+                ),
+
+                const SizedBox(height: 24),
+
+                /// -------- BUTTONS --------
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Cancel"),
+                    ),
+                    const SizedBox(width: 12),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          // TODO: API / Email / Firebase submission
+                          Navigator.pop(context);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Message sent successfully 🚀"),
+                            ),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orangeAccent,
+                        foregroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 26,
+                          vertical: 14,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      child: const Text(
+                        "Send Message",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
               ],
-            )
-        ],
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  Widget navItem(String title, GlobalKey key) {
-    final isActive = activeSection == title;
-
-    return TextButton(
-      onPressed: () {
-        onNavigate(key);
-        if (isMobile) onMenuTap();
-      },
-      child: Column(
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              color: isActive ? Colors.orangeAccent : Colors.white70,
-              fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-            ),
-          ),
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 250),
-            margin: const EdgeInsets.only(top: 4),
-            height: 2,
-            width: isActive ? 20 : 0,
-            color: Colors.orangeAccent,
-          )
-        ],
+  /// -------- INPUT FIELD WIDGET --------
+  Widget _inputField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    TextInputType keyboardType = TextInputType.text,
+    int maxLines = 1,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: keyboardType,
+      maxLines: maxLines,
+      validator: validator,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+        ),
       ),
     );
   }
