@@ -65,75 +65,71 @@ class _PortfolioPageState extends State<PortfolioPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox(
-        height: MediaQuery.sizeOf(context).height,
-        width: MediaQuery.sizeOf(context).width,
-        child: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            /// ---------- CLEAN STICKY NAVBAR ----------
-            SliverAppBar(
-              pinned: true,
-              elevation: 3,
-              backgroundColor: Colors.blueGrey[900],
-              toolbarHeight: 70,
-              automaticallyImplyLeading: false,
-              title: SimpleNavBar(
-                onContactTap: () {
-                  showAdaptiveDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) {
-                        return const ContactFormDialog();
-                      });
-                },
-              ),
+      body: CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+          /// ---------- CLEAN STICKY NAVBAR ----------
+          SliverAppBar(
+            pinned: true,
+            elevation: 3,
+            backgroundColor: Colors.blueGrey[900],
+            toolbarHeight: 70,
+            automaticallyImplyLeading: false,
+            title: SimpleNavBar(
+              onContactTap: () {
+                showAdaptiveDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) {
+                      return const ContactFormDialog();
+                    });
+              },
             ),
+          ),
 
-            /// ---------- CONTENT ----------
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  SectionContainer(
-                    key: homeKey,
-                    background: Colors.black,
-                    showBottomDivider: true,
-                    child: const HeroSection(),
-                  ),
-                  SectionContainer(
-                    key: aboutKey,
-                    background: Colors.white,
-                    child: const AboutSection(),
-                  ),
-                  SectionContainer(
-                    key: skillsKey,
-                    background: const Color(0xFFF5F7FA),
-                    child: const SkillsSection(),
-                  ),
-                  SectionContainer(
-                    key: experienceKey,
-                    background: Colors.white,
-                    child: const ExperienceSection(),
-                  ),
-                  SectionContainer(
-                    key: portfolioKey,
-                    background: const Color(0xFFF5F7FA),
-                    child: const ProjectsSection(),
-                  ),
-                  SectionContainer(
-                    key: contactKey,
-                    background: Colors.black38,
-                    child: const ContactSection(),
-                  ),
-                  const SectionContainer(
-                    background: Colors.black,
-                    child: ProfessionalFooter(),
-                  ),
-                ],
-              ),
+          /// ---------- CONTENT ----------
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                SectionContainer(
+                  key: homeKey,
+                  background: Colors.black,
+                  showBottomDivider: true,
+                  child: const HeroSection(),
+                ),
+                SectionContainer(
+                  key: aboutKey,
+                  background: Colors.white,
+                  child: const AboutSection(),
+                ),
+                SectionContainer(
+                  key: skillsKey,
+                  background: const Color(0xFFF5F7FA),
+                  child: const SkillsSection(),
+                ),
+                SectionContainer(
+                  key: experienceKey,
+                  background: Colors.white,
+                  child: const ExperienceSection(),
+                ),
+                SectionContainer(
+                  key: portfolioKey,
+                  background: const Color(0xFFF5F7FA),
+                  child: const ProjectsSection(),
+                ),
+                SectionContainer(
+                  key: contactKey,
+                  background: Colors.blueGrey.shade900,
+                  child: const ContactSection(),
+                ),
+                const SectionContainer(
+                  background: Colors.black,
+                  child: ProfessionalFooter(),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -228,7 +224,10 @@ class SectionContainer extends StatelessWidget {
               child: child,
             ),
           ),
-          if (showBottomDivider) const SectionWaveDivider(),
+          if (showBottomDivider)
+            const SectionWaveDivider(
+              flip: true,
+            ),
         ],
       ),
     );

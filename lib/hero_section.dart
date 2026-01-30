@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mywebsite/utils/url_launcher.dart';
 
 import 'utils/animated_container.dart';
 import 'utils/buttons/iconButton.dart';
@@ -208,29 +209,50 @@ class _HeroText extends StatelessWidget {
           height: 20,
         ),
         Wrap(
+          alignment: WrapAlignment.start,
+          runAlignment: WrapAlignment.start,
+          crossAxisAlignment: WrapCrossAlignment.start,
+          spacing: 0,
+          runSpacing: 12,
           children: [
             CustomButton(
               icon: Image.asset("assets/icons/youtube.png"),
               title: "YouTube",
-              onTap: () {},
+              onTap: () {
+                urlLauncher(
+                  url: "https://www.youtube.com/",
+                );
+              },
               secondary: true,
             ),
             CustomButton(
               icon: Image.asset("assets/icons/linkedin.png"),
               title: "LinkedIn",
-              onTap: () {},
+              onTap: () {
+                urlLauncher(
+                  url: "https://www.linkedin.com/",
+                );
+              },
               secondary: true,
             ),
             CustomButton(
               icon: Image.asset("assets/icons/github.png"),
               title: "Github",
-              onTap: () {},
+              onTap: () {
+                urlLauncher(
+                  url: "https://www.github.com/",
+                );
+              },
               secondary: true,
             ),
             CustomButton(
               icon: Image.asset("assets/icons/twitter.png"),
               title: "Twitter",
-              onTap: () {},
+              onTap: () {
+                urlLauncher(
+                  url: "https://www.twitter.com/",
+                );
+              },
               secondary: true,
             ),
           ],

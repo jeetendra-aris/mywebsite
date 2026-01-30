@@ -6,32 +6,55 @@ class AboutSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 500;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isMobile = constraints.maxWidth < 700;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SectionTitle(title: 'About Me'),
-        const SizedBox(height: 40),
-        Flex(
-          direction: isMobile ? Axis.vertical : Axis.horizontal,
+        return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // LEFT: Text Content
-            const Expanded(
-              flex: 6,
-              child: _AboutText(),
-            ),
-
-            if (!isMobile) const SizedBox(width: 50),
-            if (isMobile) const SizedBox(height: 40),
-
-            // RIGHT: Highlights / Stats
-            const Expanded(
-              flex: 5,
-              child: _AboutHighlights(),
-            ),
+            const SectionTitle(title: 'About Me'),
+            const SizedBox(height: 40),
+            isMobile ? const _MobileAboutLayout() : const _DesktopAboutLayout(),
           ],
+        );
+      },
+    );
+  }
+}
+
+class _MobileAboutLayout extends StatelessWidget {
+  const _MobileAboutLayout();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _AboutText(),
+        SizedBox(height: 40),
+        _AboutHighlights(),
+      ],
+    );
+  }
+}
+
+class _DesktopAboutLayout extends StatelessWidget {
+  const _DesktopAboutLayout();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 6,
+          child: _AboutText(),
+        ),
+        SizedBox(width: 50),
+        Expanded(
+          flex: 5,
+          child: _AboutHighlights(),
         ),
       ],
     );

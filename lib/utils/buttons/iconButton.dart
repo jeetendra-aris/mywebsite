@@ -29,9 +29,7 @@ class _CustomButtonState extends State<CustomButton> {
             backgroundColor: Colors.white,
             foregroundColor: Colors.black,
           ),
-          onPressed: () {
-            // Scroll to contact section
-          },
+          onPressed: widget.onTap,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [

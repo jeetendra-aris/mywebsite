@@ -24,7 +24,7 @@ class ProjectsSection extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           mainAxisSpacing: 32,
           crossAxisSpacing: 32,
-          childAspectRatio: .85,
+          childAspectRatio: .80,
           children: const [
             ProjectCard(
               title: 'Ride Booking Platform',

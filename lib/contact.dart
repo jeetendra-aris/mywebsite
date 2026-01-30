@@ -7,34 +7,42 @@ class ContactSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 700;
+    final width = MediaQuery.of(context).size.width;
+    final isMobile = width < 700;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SectionTitle(title: 'Get In Touch', light: true),
-        const SizedBox(height: 40),
-        Flex(
-          direction: isMobile ? Axis.vertical : Axis.horizontal,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // LEFT: Contact Info
-            const Expanded(
-              flex: 1,
-              child: ContactInfoPanel(),
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 24),
+      color: Colors.blueGrey.shade900,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SectionTitle(title: 'Get In Touch', light: true),
+          const SizedBox(height: 40),
+
+          /// ✅ DESKTOP LAYOUT
+          if (!isMobile)
+            const Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: ContactInfoPanel()),
+                SizedBox(width: 40),
+                Expanded(child: ContactForm()),
+              ],
             ),
 
-            if (!isMobile) const SizedBox(width: 40),
-            if (isMobile) const SizedBox(height: 40),
-
-            // RIGHT: Contact Form
-            const Expanded(
-              flex: 1,
-              child: ContactForm(),
+          /// ✅ MOBILE LAYOUT
+          if (isMobile)
+            const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ContactInfoPanel(),
+                SizedBox(height: 32),
+                ContactForm(),
+              ],
             ),
-          ],
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -137,19 +145,19 @@ class ContactInfoPanel extends StatelessWidget {
         const ContactInfoCard(
           icon: Icons.email,
           title: 'Email',
-          value: 'your@email.com',
+          value: 'dev.jeetendra1503@email.com',
         ),
         const SizedBox(height: 20),
         const ContactInfoCard(
           icon: Icons.phone,
           title: 'Phone',
-          value: '+91 90000 00000',
+          value: '+91 7509005537',
         ),
         const SizedBox(height: 20),
         const ContactInfoCard(
           icon: Icons.location_on,
           title: 'Location',
-          value: 'India',
+          value: 'Noida, Uttar Pradesh, India',
         ),
         const SizedBox(height: 20),
         Row(
@@ -214,13 +222,19 @@ class ContactInfoCard extends StatelessWidget {
             child: Icon(icon, color: Colors.white),
           ),
           const SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: const TextStyle(color: Colors.white70, fontSize: 14)),
-              const SizedBox(height: 4),
-              Text(value, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           )
         ],
       ),
