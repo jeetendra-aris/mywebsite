@@ -6,8 +6,6 @@ class ExperienceSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 900;
-
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

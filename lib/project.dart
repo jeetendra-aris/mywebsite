@@ -29,12 +29,12 @@ class ProjectsSection extends StatelessWidget {
             ProjectCard(
               title: 'Ride Booking Platform',
               description: 'Real-time ride booking app with live tracking, payments and route optimization.',
-              tech: ['Flutter', 'Firebase', 'Maps API'],
+              tech: ['Flutter', 'Firebase', 'Maps API', 'Payment'],
             ),
             ProjectCard(
               title: 'E-Commerce Application',
               description: 'High-performance shopping app with secure checkout and admin dashboard.',
-              tech: ['Flutter', 'REST API', 'Stripe'],
+              tech: ['Flutter', 'REST API', 'Stripe', 'In-app purchase'],
             ),
             ProjectCard(
               title: 'Healthcare Management System',
@@ -129,24 +129,39 @@ class _ProjectCardState extends State<ProjectCard> {
                       color: Colors.black87,
                       height: 1.5,
                     ),
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 14),
-
-                  // Tech Chips
                   Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: widget.tech
-                        .map(
-                          (t) => Chip(
-                            label: Text(
-                              t,
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                            backgroundColor: Colors.blue.withOpacity(.08),
-                          ),
-                        )
-                        .toList(),
+                    children: [
+                      const Text(
+                        "Used Skills:-",
+                        style: TextStyle(
+                          color: Colors.black26,
+                          height: 1.5,
+                        ),
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(width: 15),
+                      // Tech Chips
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: widget.tech
+                            .map(
+                              (t) => Chip(
+                                label: Text(
+                                  t,
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                                backgroundColor: Colors.blue.withOpacity(.08),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ],
                   ),
 
                   const SizedBox(height: 20),

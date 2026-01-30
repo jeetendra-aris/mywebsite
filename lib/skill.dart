@@ -6,47 +6,46 @@ class SkillsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final crossAxisCount = width < 700
-        ? 2
-        : width < 1000
-            ? 3
-            : 5;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        const SectionTitle(title: 'Skills'),
-        const SizedBox(height: 40),
-        ...skillCategories.map((category) => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  category.title,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SectionTitle(title: 'Skills'),
+              const SizedBox(height: 40),
+              ...skillCategories.map((category) => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        category.title,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
-                ),
-                const SizedBox(height: 20),
-                Wrap(
-                  alignment: WrapAlignment.start,
-                  runAlignment: WrapAlignment.start,
-                  crossAxisAlignment: WrapCrossAlignment.start,
-                  spacing: 24,
-                  runSpacing: 24,
-                  children: category.skills
-                      .map(
-                        (skill) => SkillCard(
-                          title: skill.title,
-                          icon: skill.icon,
-                          color: skill.color,
-                        ),
-                      )
-                      .toList(),
-                ),
-                const SizedBox(height: 50),
-              ],
-            )),
+                      const SizedBox(height: 20),
+                      Wrap(
+                        alignment: WrapAlignment.start,
+                        runAlignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        spacing: 24,
+                        runSpacing: 24,
+                        children: category.skills
+                            .map(
+                              (skill) => SkillCard(
+                                title: skill.title,
+                                icon: skill.icon,
+                                color: skill.color,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                      const SizedBox(height: 50),
+                    ],
+                  )),
+            ],
+          ),
+        ),
       ],
     );
   }
