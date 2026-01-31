@@ -9,7 +9,7 @@ class ProjectsSection extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     final crossAxisCount = width < 700
         ? 1
-        : width < 1100
+        : width < 1000
             ? 2
             : 3;
 
@@ -24,11 +24,15 @@ class ProjectsSection extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           mainAxisSpacing: 32,
           crossAxisSpacing: 32,
-          childAspectRatio: .80,
+          childAspectRatio: width < 700
+              ? .82
+              : width < 1000
+                  ? .65
+                  : .80,
           children: const [
             ProjectCard(
               title: 'Ride Booking Platform',
-              description: 'Real-time ride booking app with live tracking, payments and route optimization.',
+              description: 'Real-time ride booking app with live tracking, payments and route optimization. Real-time ride booking app with live tracking, payments and route optimization.',
               tech: ['Flutter', 'Firebase', 'Maps API', 'Payment'],
             ),
             ProjectCard(
@@ -115,53 +119,35 @@ class _ProjectCardState extends State<ProjectCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  Text(widget.title, style: Theme.of(context).textTheme.headlineSmall),
                   const SizedBox(height: 10),
                   Text(
                     widget.description,
-                    style: const TextStyle(
-                      color: Colors.black87,
-                      height: 1.5,
-                    ),
-                    maxLines: 4,
+                    style: Theme.of(context).textTheme.bodySmall,
+                    maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 14),
-                  Wrap(
-                    children: [
-                      const Text(
-                        "Used Skills:-",
-                        style: TextStyle(
-                          color: Colors.black26,
-                          height: 1.5,
-                        ),
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(width: 15),
-                      // Tech Chips
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: widget.tech
-                            .map(
-                              (t) => Chip(
+
+                  SizedBox(
+                    height: 40,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: widget.tech
+                          .map(
+                            (t) => Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: Chip(
                                 label: Text(
                                   t,
                                   style: const TextStyle(fontSize: 12),
                                 ),
                                 backgroundColor: Colors.blue.withOpacity(.08),
                               ),
-                            )
-                            .toList(),
-                      ),
-                    ],
+                            ),
+                          )
+                          .toList(),
+                    ),
                   ),
 
                   const SizedBox(height: 20),
