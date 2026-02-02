@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mywebsite/utils/url_launcher.dart';
 import 'package:mywebsite/views/widgets/dialogs/contact_form.dart';
-import 'package:mywebsite/views/widgets/navigation_bar/navbar_item.dart';
+import 'package:mywebsite/views/widgets/dialogs/login_dialog.dart';
 import 'package:mywebsite/views/widgets/navigation_bar/navbar_logo.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
@@ -24,65 +25,67 @@ class MyNavigationBar extends StatelessWidget {
   }
 }
 
-class NavigationBarTabletDesktop extends StatelessWidget {
+class NavigationBarTabletDesktop extends ConsumerWidget {
   const NavigationBarTabletDesktop({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       height: 100,
       color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
-        mainAxisSize: MainAxisSize.max,
         children: [
           const NavBarLogo(),
-          Expanded(
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Er. Jeetendra Soni",
-                  style: Theme.of(context).textTheme.headlineLarge,
-                ),
-                const SizedBox(width: 10),
-                NavbarItem(
-                  item: "Home",
-                  onTap: () {
-                    debugPrint("Home tapped");
-                  },
-                ),
+          const SizedBox(width: 20),
 
-                /// ---- CONTACT BUTTON ----
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      showAdaptiveDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context) {
-                            return const ContactFormDialog();
-                          });
-                    },
-                    icon: const Icon(Icons.mail_outline),
-                    label: const Text("Contact Me"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orangeAccent,
-                      foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          Text(
+            "Er. Jeetendra Soni",
+            style: Theme.of(context).textTheme.headlineLarge,
+          ),
+
+          const Spacer(),
+
+          /// ---- CONTACT BUTTON ----
+          ElevatedButton.icon(
+            onPressed: () {
+              showAdaptiveDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => const ContactFormDialog(),
+              );
+            },
+            icon: const Icon(Icons.mail_outline),
+            label: const Text("Contact Me"),
+            style: _buttonStyle,
+          ),
+
+          const SizedBox(width: 12),
+
+          // ---- AUTH ACTION ----
+          ElevatedButton(
+            onPressed: () {
+              showAdaptiveDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => const LoginDialog(),
+              );
+            },
+            style: _buttonStyle,
+            child: const Text("Login"),
           )
         ],
       ),
     );
   }
+
+  ButtonStyle get _buttonStyle => ElevatedButton.styleFrom(
+        backgroundColor: Colors.orangeAccent,
+        foregroundColor: Colors.black,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+      );
 }
 
 class NavigationBarMobile extends StatelessWidget {

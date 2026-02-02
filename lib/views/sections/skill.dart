@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mywebsite/utils.dart';
+import 'package:mywebsite/utils/utils.dart';
 
 class SkillsSection extends StatelessWidget {
   const SkillsSection({super.key});

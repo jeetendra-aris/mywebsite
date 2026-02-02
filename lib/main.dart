@@ -1,18 +1,25 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mywebsite/views/widgets/navigation_bar/navigation_bar.dart';
 
-import 'about.dart';
 import 'configs/theme_config.dart';
-import 'contact.dart';
-import 'experince.dart';
-import 'footer.dart';
-import 'hero_section.dart';
-import 'project.dart';
-import 'skill.dart';
+import 'firebase_options.dart';
+import 'views/sections/about.dart';
+import 'views/sections/contact.dart';
+import 'views/sections/experince.dart';
+import 'views/sections/footer.dart';
+import 'views/sections/hero_section.dart';
+import 'views/sections/project.dart';
+import 'views/sections/skill.dart';
 
-void main() {
-  runApp(const PortfolioApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(const ProviderScope(child: PortfolioApp()));
 }
 
 /// ---------------- APP ----------------

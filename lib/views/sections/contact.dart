@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mywebsite/utils.dart';
+import 'package:mywebsite/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactSection extends StatelessWidget {
